@@ -13,6 +13,8 @@
 #import "GPBProtocolBuffers_RuntimeSupport.h"
 #endif
 
+//Darwin.libkern.OSAtomic
+#include <libkern/OSAtomic.h>
 #import "Svga.pbobjc.h"
 // @@protoc_insertion_point(imports)
 

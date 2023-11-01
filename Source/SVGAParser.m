@@ -67,7 +67,9 @@ static NSOperationQueue *unzipQueue;
     }
     [[[NSURLSession sharedSession] dataTaskWithRequest:URLRequest completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         if (error == nil && data != nil) {
-            [self parseWithData:data cacheKey:[self cacheKey:URLRequest.URL] completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
+            [self parseWithData:data cacheKey:[self cacheKey:URLRequest.URL] 
+                      isNetWork: YES
+                completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
                 if (completionBlock) {
                     [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                         completionBlock(videoItem);
@@ -107,6 +109,7 @@ static NSOperationQueue *unzipQueue;
     }
     [self parseWithData:[NSData dataWithContentsOfFile:filePath]
                cacheKey:[self cacheKey:[NSURL fileURLWithPath:filePath]]
+              isNetWork: NO
         completionBlock:completionBlock
            failureBlock:failureBlock];
 }
@@ -152,6 +155,35 @@ static NSOperationQueue *unzipQueue;
                     }];
                 }
             }
+        } else if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheDir stringByAppendingString:@"/index.svga"]]) {
+            NSData *data = [NSData dataWithContentsOfFile:[cacheDir stringByAppendingString:@"/index.svga"]];
+            NSLog(@"path ===1 %@",cacheDir);
+            NSData *inflateData = [self zlibInflate:data];
+            NSError *err;
+            SVGAProtoMovieEntity *protoObject = [SVGAProtoMovieEntity parseFromData:inflateData error:&err];
+            if (!err && [protoObject isKindOfClass:[SVGAProtoMovieEntity class]]) {
+                SVGAVideoEntity *videoItem = [[SVGAVideoEntity alloc] initWithProtoObject:protoObject cacheDir:@""];
+                [videoItem resetImagesWithProtoObject:protoObject];
+                [videoItem resetSpritesWithProtoObject:protoObject];
+                [videoItem resetAudiosWithProtoObject:protoObject];
+                if (self.enabledMemoryCache) {
+                    [videoItem saveCache:cacheKey];
+                } else {
+                    [videoItem saveWeakCache:cacheKey];
+                }
+                if (completionBlock) {
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        completionBlock(videoItem);
+                    }];
+                }
+            } else {
+                if (failureBlock) {
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        failureBlock([NSError errorWithDomain:NSFilePathErrorKey code:-1 userInfo:nil]);
+                    }];
+                }
+            }
+            
         }
         else {
             NSError *err;
@@ -200,6 +232,7 @@ static NSOperationQueue *unzipQueue;
 
 - (void)parseWithData:(nonnull NSData *)data
              cacheKey:(nonnull NSString *)cacheKey
+            isNetWork: (BOOL)isNetWork
       completionBlock:(void ( ^ _Nullable)(SVGAVideoEntity * _Nonnull videoItem))completionBlock
          failureBlock:(void ( ^ _Nullable)(NSError * _Nonnull error))failureBlock {
     SVGAVideoEntity *cacheItem = [SVGAVideoEntity readCache:cacheKey];
@@ -218,6 +251,22 @@ static NSOperationQueue *unzipQueue;
         // Maybe is SVGA 2.0.0
         [parseQueue addOperationWithBlock:^{
             NSData *inflateData = [self zlibInflate:data];
+            if (![[NSFileManager defaultManager] fileExistsAtPath:[self cacheDirectory:cacheKey]] && isNetWork) {
+                if (data != nil) {
+                    
+                    NSString *cacheDir = [self cacheDirectory:cacheKey];
+                    if ([cacheDir isKindOfClass:[NSString class]]) {
+                        [[NSFileManager defaultManager] createDirectoryAtPath:cacheDir withIntermediateDirectories:NO attributes:nil error:nil];
+                        
+                        NSString * path = [cacheDir stringByAppendingString:@"/index.svga"];
+                        NSLog(@"path === %@",path);
+                        [data writeToFile:path atomically:YES];
+                    }
+                }
+                
+                
+            }
+            
             NSError *err;
             SVGAProtoMovieEntity *protoObject = [SVGAProtoMovieEntity parseFromData:inflateData error:&err];
             if (!err && [protoObject isKindOfClass:[SVGAProtoMovieEntity class]]) {

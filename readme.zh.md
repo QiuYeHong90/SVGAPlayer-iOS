@@ -30,7 +30,7 @@
 添加依赖 'SVGAPlayer', '~> 2.3' 到 Podfile 文件中:
 
 target 'MyApp' do
-  pod 'SVGAPlayer', '~> 2.3'
+  pod "SVGAPlayer", :git => 'git@github.com:QiuYeHong90/SVGAPlayer-iOS.git'
 end
 
 然后在终端执行 `pod install`。

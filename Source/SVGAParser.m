@@ -411,6 +411,12 @@ static NSOperationQueue *unzipQueue;
 }
 
 - (nullable NSString *)cacheDirectory:(NSString *)cacheKey {
+    if (self.customCacheDir) {
+        if (![[NSFileManager defaultManager] fileExistsAtPath:self.customCacheDir]) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:self.customCacheDir withIntermediateDirectories:YES attributes:nil error:nil];
+        }
+        return [self.customCacheDir stringByAppendingFormat:@"/%@", cacheKey];;
+    }
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
     return [cacheDir stringByAppendingFormat:@"/%@", cacheKey];
 }

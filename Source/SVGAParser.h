@@ -13,6 +13,9 @@
 @interface SVGAParser : NSObject
 
 @property (nonatomic, assign) BOOL enabledMemoryCache;
+/// 默认为空 lib/cache
+@property (nonatomic, copy) NSString * _Nullable customCacheDir;
+
 
 - (void)parseWithURL:(nonnull NSURL *)URL
      completionBlock:(void ( ^ _Nonnull )(SVGAVideoEntity * _Nullable videoItem))completionBlock

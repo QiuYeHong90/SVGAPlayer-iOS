@@ -26,7 +26,14 @@ static SVGAParser *parser;
     self.aPlayer.delegate = self;
     self.aPlayer.loops = 1;
     self.aPlayer.clearsAfterStop = YES;
+    
+    
     parser = [[SVGAParser alloc] init];
+    
+    
+    NSString * doucmentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject ;
+    parser.customCacheDir = [doucmentPath stringByAppendingString:@"/SVGACache"];
+    
     [self onChange:nil];
 }
 

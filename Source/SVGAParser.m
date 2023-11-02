@@ -417,7 +417,13 @@ static NSOperationQueue *unzipQueue;
         }
         return [self.customCacheDir stringByAppendingFormat:@"/%@", cacheKey];;
     }
+    
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+    cacheDir = [cacheDir stringByAppendingString:@"/SVGACache"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:cacheDir]) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:cacheDir withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    self.customCacheDir = cacheDir;
     return [cacheDir stringByAppendingFormat:@"/%@", cacheKey];
 }
 

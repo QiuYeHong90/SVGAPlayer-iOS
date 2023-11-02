@@ -248,6 +248,7 @@ static NSOperationQueue *unzipQueue;
         return;
     }
     if (![SVGAParser isZIPData:data]) {
+        NSLog(@"SVGA === 2.0.0");
         // Maybe is SVGA 2.0.0
         [parseQueue addOperationWithBlock:^{
             NSData *inflateData = [self zlibInflate:data];
@@ -288,6 +289,7 @@ static NSOperationQueue *unzipQueue;
         }];
         return ;
     }
+    NSLog(@"SVGA === 2.0.0 no");
     [unzipQueue addOperationWithBlock:^{
         if ([[NSFileManager defaultManager] fileExistsAtPath:[self cacheDirectory:cacheKey]]) {
             [self parseWithCacheKey:cacheKey completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
@@ -310,6 +312,7 @@ static NSOperationQueue *unzipQueue;
         if (data != nil) {
             [data writeToFile:tmpPath atomically:YES];
             NSString *cacheDir = [self cacheDirectory:cacheKey];
+            NSLog(@"SVGA === 2.0.0 no %@",cacheDir);
             if ([cacheDir isKindOfClass:[NSString class]]) {
                 [[NSFileManager defaultManager] createDirectoryAtPath:cacheDir withIntermediateDirectories:NO attributes:nil error:nil];
                 [SSZipArchive unzipFileAtPath:tmpPath toDestination:[self cacheDirectory:cacheKey] progressHandler:^(NSString * _Nonnull entry, unz_file_info zipInfo, long entryNumber, long total) {

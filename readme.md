@@ -1,5 +1,10 @@
 # Archived
 本仓库已经停止维护，你仍然继续阅读源码及创建分叉，但本仓库不会继续更新，也不会回答任何 issue。
+- 本仓库是克隆的原来的项目进行扩展升级,有bug 就再原来项目进行issue, 我看到会进行修复
+支持的功能如下
+* 支持源文件svga 的缓存
+* 解决了swift项目进行引用的报错
+
 
 This repo has stopped maintenance, you can still continue to read the source code and create forks, but this repo will not continue to be updated, nor will it answer any issues.
 

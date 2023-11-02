@@ -289,6 +289,7 @@ static NSOperationQueue *unzipQueue;
         }];
         return ;
     }
+    // 遮罩 层svga
     NSLog(@"SVGA === matte layer ");
     [unzipQueue addOperationWithBlock:^{
         if ([[NSFileManager defaultManager] fileExistsAtPath:[self cacheDirectory:cacheKey]]) {

@@ -49,6 +49,7 @@ static NSOperationQueue *unzipQueue;
         return;
     }
     if ([[NSFileManager defaultManager] fileExistsAtPath:[self cacheDirectory:[self cacheKey:URLRequest.URL]]]) {
+        
         [self parseWithCacheKey:[self cacheKey:URLRequest.URL] completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
             if (completionBlock) {
                 [[NSOperationQueue mainQueue] addOperationWithBlock:^{
@@ -128,6 +129,7 @@ static NSOperationQueue *unzipQueue;
             return;
         }
         NSString *cacheDir = [self cacheDirectory:cacheKey];
+        NSLog(@"SVGA === cache %@",cacheDir);
         if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheDir stringByAppendingString:@"/movie.binary"]]) {
             NSError *err;
             NSData *protoData = [NSData dataWithContentsOfFile:[cacheDir stringByAppendingString:@"/movie.binary"]];

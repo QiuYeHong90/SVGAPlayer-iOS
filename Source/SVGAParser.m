@@ -155,8 +155,8 @@ static NSOperationQueue *unzipQueue;
                     }];
                 }
             }
-        } else if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheDir stringByAppendingString:@"/index.svga"]]) {
-            NSData *data = [NSData dataWithContentsOfFile:[cacheDir stringByAppendingString:@"/index.svga"]];
+        } else if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheDir stringByAppendingString:@"/index200.svga"]]) {
+            NSData *data = [NSData dataWithContentsOfFile:[cacheDir stringByAppendingString:@"/index200.svga"]];
             NSLog(@"path ===1 %@",cacheDir);
             NSData *inflateData = [self zlibInflate:data];
             NSError *err;
@@ -258,7 +258,7 @@ static NSOperationQueue *unzipQueue;
                     if ([cacheDir isKindOfClass:[NSString class]]) {
                         [[NSFileManager defaultManager] createDirectoryAtPath:cacheDir withIntermediateDirectories:NO attributes:nil error:nil];
                         
-                        NSString * path = [cacheDir stringByAppendingString:@"/index.svga"];
+                        NSString * path = [cacheDir stringByAppendingString:@"/index200.svga"];
                         NSLog(@"path === %@",path);
                         [data writeToFile:path atomically:YES];
                     }

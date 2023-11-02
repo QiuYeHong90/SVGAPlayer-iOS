@@ -45,9 +45,11 @@ Here introduce `SVGAPlayer-iOS` usage. Wonder exporting usage? Click [here](http
 
 You want to add pod 'SVGAPlayer', '~> 2.3' similar to the following to your Podfile:
 
+```
 target 'MyApp' do
   pod "SVGAPlayer", :git => 'git@github.com:QiuYeHong90/SVGAPlayer-iOS.git'
 end
+```
 
 Then run a `pod install` inside your terminal, or from CocoaPods.app.
 

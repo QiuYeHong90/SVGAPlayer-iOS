@@ -224,6 +224,23 @@ static NSOperationQueue *unzipQueue;
     [[NSFileManager defaultManager] removeItemAtPath:cacheDir error:NULL];
 }
 
+
+-(BOOL)isCacheWithUrl: (NSString *_Nonnull)urlStr {
+    NSURL * url = [[NSURL alloc] initWithString:urlStr];
+    if (url) {
+        return [[NSFileManager defaultManager] fileExistsAtPath:[self cacheDirectory:[self cacheKey:url]]];
+    }
+    return NO;
+}
+
+-(NSString *_Nullable)cachePathWithUrl: (NSString *_Nonnull)urlStr {
+    NSURL * url = [[NSURL alloc] initWithString:urlStr];
+    if (url) {
+        return [self cacheDirectory:[self cacheKey:url]];
+    }
+    return nil;
+}
+
 + (BOOL)isZIPData:(NSData *)data {
     BOOL result = NO;
     if (!strncmp([data bytes], ZIP_MAGIC_NUMBER, strlen(ZIP_MAGIC_NUMBER))) {

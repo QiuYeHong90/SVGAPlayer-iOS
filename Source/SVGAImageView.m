@@ -46,4 +46,14 @@ static SVGAParser *sharedParser;
     }
 }
 
+
++(void)cahceSvgaWithUrl:(NSString *)url success: (void (^ _Nonnull)(void))success fail: (void (^ _Nonnull)(void))fail {
+    if ([url hasPrefix:@"http://"] || [url hasPrefix:@"https://"]) {
+        [sharedParser parseWithURL:[NSURL URLWithString:url] completionBlock:^(SVGAVideoEntity * _Nullable videoItem) {
+            success();
+        } failureBlock: ^(NSError * err){
+            fail();
+        }];
+    }
+}
 @end

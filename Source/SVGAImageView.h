@@ -12,5 +12,5 @@
 
 @property (nonatomic, assign) IBInspectable BOOL autoPlay;
 @property (nonatomic, strong) IBInspectable NSString *imageName;
-
++(void)cahceSvgaWithUrl:(NSString *)url success: (void (^ _Nonnull)(void))success fail: (void (^ _Nonnull)(void))fail;
 @end

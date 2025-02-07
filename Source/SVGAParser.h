@@ -42,5 +42,6 @@
               inBundle:(nullable NSBundle *)inBundle
        completionBlock:(void ( ^ _Nullable)(SVGAVideoEntity * _Nonnull videoItem))completionBlock
           failureBlock:(void ( ^ _Nullable)(NSError * _Nonnull error))failureBlock;
-
+-(BOOL)isCacheWithUrl: (NSString *_Nonnull)urlStr;
+-(NSString *_Nullable)cachePathWithUrl: (NSString *_Nonnull)urlStr;
 @end

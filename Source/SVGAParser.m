@@ -426,6 +426,11 @@ static NSOperationQueue *unzipQueue;
 - (nonnull NSString *)cacheKey:(NSURL *)URL {
     return [self MD5String:URL.absoluteString];
 }
+- (void)clearCacheWithUrl:(NSURL *)URL {
+    [self clearCache:[self cacheKey:URL]];
+}
+
+
 
 - (nullable NSString *)cacheDirectory:(NSString *)cacheKey {
     if (self.customCacheDir) {

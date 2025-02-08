@@ -14,6 +14,8 @@
 		718A146D235718E000FED5D3 /* Rocket.svga in Resources */ = {isa = PBXBuildFile; fileRef = 718A146C235718E000FED5D3 /* Rocket.svga */; };
 		71A8679122B7785100176CD6 /* matteRect.svga in Resources */ = {isa = PBXBuildFile; fileRef = 71A8679022B7785100176CD6 /* matteRect.svga */; };
 		71A8679322B7853600176CD6 /* matteBitmap.svga in Resources */ = {isa = PBXBuildFile; fileRef = 71A8679222B7853600176CD6 /* matteBitmap.svga */; };
+		71D826B72D577130004EAC4E /* index200.zip in Resources */ = {isa = PBXBuildFile; fileRef = 71D826B62D577130004EAC4E /* index200.zip */; };
+		71D826BD2D577296004EAC4E /* index2001.svga.zip in Resources */ = {isa = PBXBuildFile; fileRef = 71D826BC2D577296004EAC4E /* index2001.svga.zip */; };
 		71DAA8A52355B3ED006608A1 /* Goddess.svga in Resources */ = {isa = PBXBuildFile; fileRef = 71DAA8A42355B3ED006608A1 /* Goddess.svga */; };
 		80D4C7254846B96B9C6EED83 /* libPods-SVGAPlayer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DDA5FF396660C7C932DF9B8 /* libPods-SVGAPlayer.a */; };
 		904D41F81D223DD20085A21A /* SVGABezierPath.m in Sources */ = {isa = PBXBuildFile; fileRef = 904D41F71D223DD20085A21A /* SVGABezierPath.m */; };
@@ -53,6 +55,8 @@
 		718A146C235718E000FED5D3 /* Rocket.svga */ = {isa = PBXFileReference; lastKnownFileType = file; path = Rocket.svga; sourceTree = "<group>"; };
 		71A8679022B7785100176CD6 /* matteRect.svga */ = {isa = PBXFileReference; lastKnownFileType = file; path = matteRect.svga; sourceTree = "<group>"; };
 		71A8679222B7853600176CD6 /* matteBitmap.svga */ = {isa = PBXFileReference; lastKnownFileType = file; path = matteBitmap.svga; sourceTree = "<group>"; };
+		71D826B62D577130004EAC4E /* index200.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = index200.zip; sourceTree = "<group>"; };
+		71D826BC2D577296004EAC4E /* index2001.svga.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = index2001.svga.zip; sourceTree = "<group>"; };
 		71DAA8A42355B3ED006608A1 /* Goddess.svga */ = {isa = PBXFileReference; lastKnownFileType = file; path = Goddess.svga; sourceTree = "<group>"; };
 		8AD65028FA2D122A34DC4A63 /* Pods-SVGAPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SVGAPlayer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SVGAPlayer/Pods-SVGAPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		904D41F61D223DD20085A21A /* SVGABezierPath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVGABezierPath.h; sourceTree = "<group>"; };
@@ -214,6 +218,8 @@
 				63712E6421787950001AE014 /* heartbeat.svga */,
 				90D7CA1A1F7FB114006E74F0 /* rose_1.5.0.svga */,
 				90D7CA191F7FB114006E74F0 /* rose_2.0.0.svga */,
+				71D826B62D577130004EAC4E /* index200.zip */,
+				71D826BC2D577296004EAC4E /* index2001.svga.zip */,
 			);
 			path = Samples;
 			sourceTree = "<group>";
@@ -268,7 +274,7 @@
 				TargetAttributes = {
 					90A676DC1D13A6DF008A69F3 = {
 						CreatedOnToolsVersion = 7.3;
-						DevelopmentTeam = S2RM275849;
+						DevelopmentTeam = 6VFMQX7MGH;
 					};
 				};
 			};
@@ -303,10 +309,12 @@
 				63712E6521787950001AE014 /* heartbeat.svga in Resources */,
 				90A676EB1D13A6DF008A69F3 /* Main.storyboard in Resources */,
 				90CB64F91EF297E800DAA382 /* SVGAPlayer React-Info.plist in Resources */,
+				71D826B72D577130004EAC4E /* index200.zip in Resources */,
 				71A8679122B7785100176CD6 /* matteRect.svga in Resources */,
 				71A8679322B7853600176CD6 /* matteBitmap.svga in Resources */,
 				90D7CA1C1F7FB114006E74F0 /* rose_1.5.0.svga in Resources */,
 				90D7CA1B1F7FB114006E74F0 /* rose_2.0.0.svga in Resources */,
+				71D826BD2D577296004EAC4E /* index2001.svga.zip in Resources */,
 				E83A58D9247E0E6A00D9F404 /* audio_biling.svga in Resources */,
 				71DAA8A52355B3ED006608A1 /* Goddess.svga in Resources */,
 			);
@@ -471,12 +479,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = S2RM275849;
+				DEVELOPMENT_TEAM = 6VFMQX7MGH;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = SVGAPlayer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.opensource.SVGAPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.opensource.SVGAPlayer123;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -489,12 +497,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = S2RM275849;
+				DEVELOPMENT_TEAM = 6VFMQX7MGH;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = SVGAPlayer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.opensource.SVGAPlayer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.opensource.SVGAPlayer123;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -373,6 +373,36 @@ static NSOperationQueue *unzipQueue;
                                 }
                             }
                         }
+                        else if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheDir stringByAppendingString:@"/index200.svga"]]) {
+                            NSData *data = [NSData dataWithContentsOfFile:[cacheDir stringByAppendingString:@"/index200.svga"]];
+                            NSLog(@"path ===1 %@",cacheDir);
+                            NSData *inflateData = [self zlibInflate:data];
+                            NSError *err;
+                            SVGAProtoMovieEntity *protoObject = [SVGAProtoMovieEntity parseFromData:inflateData error:&err];
+                            if (!err && [protoObject isKindOfClass:[SVGAProtoMovieEntity class]]) {
+                                SVGAVideoEntity *videoItem = [[SVGAVideoEntity alloc] initWithProtoObject:protoObject cacheDir:@""];
+                                [videoItem resetImagesWithProtoObject:protoObject];
+                                [videoItem resetSpritesWithProtoObject:protoObject];
+                                [videoItem resetAudiosWithProtoObject:protoObject];
+                                if (self.enabledMemoryCache) {
+                                    [videoItem saveCache:cacheKey];
+                                } else {
+                                    [videoItem saveWeakCache:cacheKey];
+                                }
+                                if (completionBlock) {
+                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                        completionBlock(videoItem);
+                                    }];
+                                }
+                            } else {
+                                if (failureBlock) {
+                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                        failureBlock([NSError errorWithDomain:NSFilePathErrorKey code:-1 userInfo:nil]);
+                                    }];
+                                }
+                            }
+                            
+                        }
                         else {
                             NSError *err;
                             NSData *JSONData = [NSData dataWithContentsOfFile:[cacheDir stringByAppendingString:@"/movie.spec"]];

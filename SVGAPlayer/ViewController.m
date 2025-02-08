@@ -43,6 +43,36 @@ static SVGAParser *parser;
 }
 
 - (IBAction)onChange:(id)sender {
+//    rose_2.0.0.zip index200.svga
+//    NSString * path = [[NSBundle mainBundle] pathForResource:@"index200.zip" ofType:nil];
+    NSString * path = [[NSBundle mainBundle] pathForResource:@"index2001.svga.zip" ofType:nil];
+    NSData * data = [[NSData alloc] initWithContentsOfFile:path];
+ 
+    if (data) {
+        [parser parseWithData:data cacheKey:@"test111" isNetWork:NO completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
+            if (videoItem != nil) {
+                self.aPlayer.videoItem = videoItem;
+                NSMutableParagraphStyle *para = [[NSMutableParagraphStyle alloc] init];
+                [para setLineBreakMode:NSLineBreakByTruncatingTail];
+                [para setAlignment:NSTextAlignmentCenter];
+                NSAttributedString *str = [[NSAttributedString alloc]
+                                           initWithString:@"Hello, World! Hello, World!"
+                                           attributes:@{
+                                               NSFontAttributeName: [UIFont systemFontOfSize:28],
+                                               NSForegroundColorAttributeName: [UIColor whiteColor],
+                                               NSParagraphStyleAttributeName: para,
+                                           }];
+                [self.aPlayer setAttributedText:str forKey:@"banner"];
+
+                [self.aPlayer startAnimation];
+                
+//                 [self.aPlayer startAnimationWithRange:NSMakeRange(10, 25) reverse:YES];
+            }
+                } failureBlock:^(NSError * _Nonnull error) {
+                    
+                }];
+    }
+    return;
     NSArray *items = @[
                        @"https://cdn.jsdelivr.net/gh/svga/SVGA-Samples@master/EmptyState.svga?raw=true",
                        @"https://cdn.jsdelivr.net/gh/svga/SVGA-Samples@master/HamburgerArrow.svga?raw=true",

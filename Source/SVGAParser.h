@@ -45,4 +45,6 @@
 -(BOOL)isCacheWithUrl: (NSString *_Nonnull)urlStr;
 -(NSString *_Nullable)cachePathWithUrl: (NSString *_Nonnull)urlStr;
 - (void)clearCacheWithUrl:(NSURL *_Nonnull)URL;
+
+- (nonnull NSString *)cacheKey:(NSURL *_Nonnull)URL;
 @end

@@ -24,7 +24,9 @@ static SVGAParser *sharedParser;
 - (NSString *)customCacheDir {
     return  sharedParser.customCacheDir;
 }
-
++(SVGAParser *_Nullable)parser {
+    return  sharedParser;
+}
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {

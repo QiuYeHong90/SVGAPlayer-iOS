@@ -17,6 +17,15 @@ static SVGAParser *sharedParser;
     sharedParser = [SVGAParser new];
 }
 
+- (void)setCustomCacheDir:(NSString *)customCacheDir {
+    sharedParser.customCacheDir = customCacheDir;
+}
+
+- (NSString *)customCacheDir {
+    return  sharedParser.customCacheDir;
+}
+
+
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
     self = [super initWithCoder:coder];

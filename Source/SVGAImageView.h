@@ -12,5 +12,7 @@
 
 @property (nonatomic, assign) IBInspectable BOOL autoPlay;
 @property (nonatomic, strong) IBInspectable NSString *imageName;
+/// 默认为空 lib/cache
+@property (nonatomic, copy) NSString * _Nullable customCacheDir;
 +(void)cahceSvgaWithUrl:(NSString *)url success: (void (^ _Nonnull)(void))success fail: (void (^ _Nonnull)(void))fail;
 @end

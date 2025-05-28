@@ -453,6 +453,159 @@ static NSOperationQueue *unzipQueue;
     }];
 }
 
+- (void)parseWithData:(nonnull NSData *)data
+             cacheKey:(nonnull NSString *)cacheKey
+      completionBlock:(void ( ^ _Nullable)(SVGAVideoEntity * _Nonnull videoItem))completionBlock
+         failureBlock:(void ( ^ _Nullable)(NSError * _Nonnull error))failureBlock {
+    SVGAVideoEntity *cacheItem = [SVGAVideoEntity readCache:cacheKey];
+    if (cacheItem != nil) {
+        if (completionBlock) {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(cacheItem);
+            }];
+        }
+        return;
+    }
+    if (!data || data.length < 4) {
+        return;
+    }
+    if (![SVGAParser isZIPData:data]) {
+        // Maybe is SVGA 2.0.0
+        [parseQueue addOperationWithBlock:^{
+            NSData *inflateData = [self zlibInflate:data];
+            NSError *err;
+            SVGAProtoMovieEntity *protoObject = [SVGAProtoMovieEntity parseFromData:inflateData error:&err];
+            if (!err && [protoObject isKindOfClass:[SVGAProtoMovieEntity class]]) {
+                SVGAVideoEntity *videoItem = [[SVGAVideoEntity alloc] initWithProtoObject:protoObject cacheDir:@""];
+                [videoItem resetImagesWithProtoObject:protoObject];
+                [videoItem resetSpritesWithProtoObject:protoObject];
+                [videoItem resetAudiosWithProtoObject:protoObject];
+                if (self.enabledMemoryCache) {
+                    [videoItem saveCache:cacheKey];
+                } else {
+                    [videoItem saveWeakCache:cacheKey];
+                }
+                if (completionBlock) {
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        completionBlock(videoItem);
+                    }];
+                }
+            }
+        }];
+        return ;
+    }
+    [unzipQueue addOperationWithBlock:^{
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[self cacheDirectory:cacheKey]]) {
+            [self parseWithCacheKey:cacheKey completionBlock:^(SVGAVideoEntity * _Nonnull videoItem) {
+                if (completionBlock) {
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        completionBlock(videoItem);
+                    }];
+                }
+            } failureBlock:^(NSError * _Nonnull error) {
+                [self clearCache:cacheKey];
+                if (failureBlock) {
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        failureBlock(error);
+                    }];
+                }
+            }];
+            return;
+        }
+        NSString *tmpPath = [NSTemporaryDirectory() stringByAppendingFormat:@"%u.svga", arc4random()];
+        if (data != nil) {
+            [data writeToFile:tmpPath atomically:YES];
+            NSString *cacheDir = [self cacheDirectory:cacheKey];
+            if ([cacheDir isKindOfClass:[NSString class]]) {
+                [[NSFileManager defaultManager] createDirectoryAtPath:cacheDir withIntermediateDirectories:NO attributes:nil error:nil];
+                [SSZipArchive unzipFileAtPath:tmpPath toDestination:[self cacheDirectory:cacheKey] progressHandler:^(NSString * _Nonnull entry, unz_file_info zipInfo, long entryNumber, long total) {
+                    
+                } completionHandler:^(NSString *path, BOOL succeeded, NSError *error) {
+                    if (error != nil) {
+                        if (failureBlock) {
+                            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                failureBlock(error);
+                            }];
+                        }
+                    }
+                    else {
+                        if ([[NSFileManager defaultManager] fileExistsAtPath:[cacheDir stringByAppendingString:@"/movie.binary"]]) {
+                            NSError *err;
+                            NSData *protoData = [NSData dataWithContentsOfFile:[cacheDir stringByAppendingString:@"/movie.binary"]];
+                            SVGAProtoMovieEntity *protoObject = [SVGAProtoMovieEntity parseFromData:protoData error:&err];
+                            if (!err) {
+                                SVGAVideoEntity *videoItem = [[SVGAVideoEntity alloc] initWithProtoObject:protoObject cacheDir:cacheDir];
+                                [videoItem resetImagesWithProtoObject:protoObject];
+                                [videoItem resetSpritesWithProtoObject:protoObject];
+                                if (self.enabledMemoryCache) {
+                                    [videoItem saveCache:cacheKey];
+                                } else {
+                                    [videoItem saveWeakCache:cacheKey];
+                                }
+                                if (completionBlock) {
+                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                        completionBlock(videoItem);
+                                    }];
+                                }
+                            }
+                            else {
+                                if (failureBlock) {
+                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                        failureBlock([NSError errorWithDomain:NSFilePathErrorKey code:-1 userInfo:nil]);
+                                    }];
+                                }
+                            }
+                        }
+                        else {
+                            NSError *err;
+                            NSData *JSONData = [NSData dataWithContentsOfFile:[cacheDir stringByAppendingString:@"/movie.spec"]];
+                            if (JSONData != nil) {
+                                NSDictionary *JSONObject = [NSJSONSerialization JSONObjectWithData:JSONData options:kNilOptions error:&err];
+                                if ([JSONObject isKindOfClass:[NSDictionary class]]) {
+                                    SVGAVideoEntity *videoItem = [[SVGAVideoEntity alloc] initWithJSONObject:JSONObject cacheDir:cacheDir];
+                                    [videoItem resetImagesWithJSONObject:JSONObject];
+                                    [videoItem resetSpritesWithJSONObject:JSONObject];
+                                    if (self.enabledMemoryCache) {
+                                        [videoItem saveCache:cacheKey];
+                                    } else {
+                                        [videoItem saveWeakCache:cacheKey];
+                                    }
+                                    if (completionBlock) {
+                                        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                            completionBlock(videoItem);
+                                        }];
+                                    }
+                                }
+                            }
+                            else {
+                                if (failureBlock) {
+                                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                                        failureBlock([NSError errorWithDomain:NSFilePathErrorKey code:-1 userInfo:nil]);
+                                    }];
+                                }
+                            }
+                        }
+                    }
+                }];
+            }
+            else {
+                if (failureBlock) {
+                    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                        failureBlock([NSError errorWithDomain:NSFilePathErrorKey code:-1 userInfo:nil]);
+                    }];
+                }
+            }
+        }
+        else {
+            if (failureBlock) {
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    failureBlock([NSError errorWithDomain:@"Data Error" code:-1 userInfo:nil]);
+                }];
+            }
+        }
+    }];
+}
+
 - (nonnull NSString *)cacheKey:(NSURL *)URL {
     return [self MD5String:URL.absoluteString];
 }
